@@ -336,6 +336,7 @@ class Griddle:
                 args, remainder = args[:(maxx - minx) / 8], args[(maxx - minx) / 8:]
                 if minx <= x < maxx and miny <= y < maxy:
                     dest.waffle_send('%s%s' % (dest.prefix, addr), x, y, *args)
+                    dest.waffle_send_any(self.snoopy_addr, self.snoopy_port, addr, x, y, *args)
                 if len(remainder) > 0:
                     # tags=None (ignored)
                     self.route(source, addr, None, [x+dest.xsize, y]+remainder)
@@ -345,6 +346,7 @@ class Griddle:
                 args, remainder = args[:(maxy - miny) / 8], args[(maxy - miny) / 8:]
                 if minx <= x < maxx and miny <= y < maxy:
                     dest.waffle_send('%s%s' % (dest.prefix, addr), x, y, *args)
+                    dest.waffle_send_any(self.snoopy_addr, self.snoopy_port, addr, x, y, *args)
                 if len(remainder) > 0:
                     # tags=None (ignored)
                     self.route(source, addr, None, [x, y+dest.ysize]+remainder)
@@ -356,6 +358,7 @@ class Griddle:
                         self.route(source, "/grid/led/map", None, [x,y]+[0,0,0,0,0,0,0,0])
             else:
                 dest.waffle_send('%s%s' % (dest.prefix, addr), data)
+                dest.waffle_send_any(self.snoopy_addr, self.snoopy_port, addr, data)
     
     def run(self):
         while True:

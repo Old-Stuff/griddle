@@ -232,10 +232,10 @@ class Griddle:
             config.remove_option(s, 'port')
 			
             if sys.argv[1] == '-s':
-
-		            self.snoopy_port = int(config.get(s, 'snoopy_port'))
-		            config.remove_option(s, 'snoopy_port')
-		    
+            
+                self.snoopy_port = int(config.get(s, 'snoopy_port'))
+                config.remove_option(s, 'snoopy_port')
+                    
                 self.snoopy_addr = config.get(s, 'snoopy_addr')
                 config.remove_option(s, 'snoopy_addr')
 

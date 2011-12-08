@@ -231,11 +231,13 @@ class Griddle:
             port = int(config.get(s, 'port'))
             config.remove_option(s, 'port')
 			
-			self.snoopy_port = int(config.get(s, 'snoopy_port'))
-			config.remove_option(s, 'snoopy_port')
+			if sys.argv[1] == '-s':
 			
-			self.snoopy_addr = config.get(s, 'snoopy_addr')
-			config.remove_option(s, 'snoopy_addr')
+				self.snoopy_port = int(config.get(s, 'snoopy_port'))
+				config.remove_option(s, 'snoopy_port')
+			
+				self.snoopy_addr = config.get(s, 'snoopy_addr')
+				config.remove_option(s, 'snoopy_addr')
 
             xsize, ysize = [int(d) for d in config.get(s, 'size').split(",")]
             config.remove_option(s, 'size')
@@ -377,7 +379,10 @@ class Griddle:
             s.close()
 
 try:
-    conf_file = sys.argv[1]
+    if sys.argv[1] != '-s':
+		conf_file = sys.argv[1]
+	else:
+		conf_file = sys.argv[2]
 except IndexError:
     print "need configuration file to run!"
     sys.exit(1)

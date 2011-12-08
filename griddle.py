@@ -231,10 +231,10 @@ class Griddle:
             port = int(config.get(s, 'port'))
             config.remove_option(s, 'port')
 			
-			snoopy_port = int(config.get(s, 'snoopy_port'))
+			self.snoopy_port = int(config.get(s, 'snoopy_port'))
 			config.remove_option(s, 'snoopy_port')
 			
-			snoopy_addr = str(config.get(s, 'snoopy_addr'))
+			self.snoopy_addr = config.get(s, 'snoopy_addr')
 			config.remove_option(s, 'snoopy_addr')
 
             xsize, ysize = [int(d) for d in config.get(s, 'size').split(",")]
@@ -294,7 +294,7 @@ class Griddle:
     
     def route(self, source, addr, tags, data):
         tsign = 1 if len(self.transtbl[source]) > 1 else -1
-        
+		
         # we have to sort devices by offset for correct splitting of row messages
         # FIXME: need to move all the offset calculation / clipping / tsign stuff to the config parser
         valid_targets = sorted(set(self.transtbl[source]) & set(self.devices.keys()), key=lambda k: self.offsets[k])
@@ -323,8 +323,11 @@ class Griddle:
             if addr.endswith("grid/key") or addr.endswith("grid/led/set") or addr.endswith("grid/led/map"):
                 x, y, args = data[0], data[1], data[2:]
                 x, y = x - xoff, y - yoff
-                if minx <= x < maxx and miny <= y < maxy:
+				
+				if minx <= x < maxx and miny <= y < maxy:
                     dest.waffle_send('%s%s' % (dest.prefix, addr), x, y, *args)
+					dest.waffle_send_any(self.snoopy_addr, self.snoopy_port, addr, x, y, *args)
+					
             elif addr.endswith("grid/led/row"):
                 x, y, args = data[0], data[1], data[2:]
                 x, y = x - xoff, y - yoff

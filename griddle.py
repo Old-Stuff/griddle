@@ -230,7 +230,13 @@ class Griddle:
         for s in config.sections():
             port = int(config.get(s, 'port'))
             config.remove_option(s, 'port')
-            
+			
+			snoopy_port = int(config.get(s, 'snoopy_port'))
+			config.remove_option(s, 'snoopy_port')
+			
+			snoopy_addr = str(config.get(s, 'snoopy_addr'))
+			config.remove_option(s, 'snoopy_addr')
+
             xsize, ysize = [int(d) for d in config.get(s, 'size').split(",")]
             config.remove_option(s, 'size')
             
